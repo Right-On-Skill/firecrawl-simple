@@ -19,7 +19,8 @@ RUN apt-get update -qq && \
     ca-certificates \
     git \
     golang-go \
-    && update-ca-certificates
+    && update-ca-certificates \
+    && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives
 
 # Copy the rest of the application
 COPY . ./
@@ -35,13 +36,13 @@ RUN cd src/lib/go-html-to-md && \
 RUN pnpm run build
 
 # Install runtime dependencies
-RUN apt-get install --no-install-recommends -y \
-    chromium \
-    chromium-sandbox \
-    && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives
+# RUN apt-get install --no-install-recommends -y \
+#     chromium \
+#     chromium-sandbox \
+#     && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives
 
 # Environment setup
-ENV PUPPETEER_EXECUTABLE_PATH="/usr/bin/chromium"
+# ENV PUPPETEER_EXECUTABLE_PATH="/usr/bin/chromium"
 ARG PORT=8080
 ENV PORT=${PORT}
 EXPOSE ${PORT}
